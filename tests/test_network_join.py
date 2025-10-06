@@ -65,7 +65,7 @@ def test_leaves_on_multipress() -> None:
         device = Device(proc)
         assert device.status()["joined"] == str(HAL_ZIGBEE_NETWORK_JOINED)
 
-        for _ in range(11):
+        for _ in range(31):
             device.click_button("A0")
             device.step_time(60)
 
