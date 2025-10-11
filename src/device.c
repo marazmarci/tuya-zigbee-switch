@@ -122,46 +122,58 @@ void user_app_init(void)
 
 bool boot_announce_sent = false;
 
+#define BUTTON_POLLING_DIVISOR 2
+#define PM_SLEEP_DURATION_MS_BUTTON (PM_SLEEP_DURATION_MS / BUTTON_POLLING_DIVISOR)
+
+int button_polling_counter = 0;
+
 void app_task(void)
 {
   millis_update();
   periferals_update();
-  if (bdb_isIdle())
-  {
-    if (zb_isDeviceJoinedNwk())
+#if PM_ENABLE
+  if (button_polling_counter++ % BUTTON_POLLING_DIVISOR == 0) {
+#endif
+    if (bdb_isIdle())
     {
-      network_indicator_connected(&network_indicator);
-      if (zb_isDeviceFactoryNew())
+      if (zb_isDeviceJoinedNwk())
       {
-        zb_deviceFactoryNewSet(false);
-      }
+        network_indicator_connected(&network_indicator);
+        if (zb_isDeviceFactoryNew())
+        {
+          zb_deviceFactoryNewSet(false);
+        }
 
-      if (!boot_announce_sent)
+        if (!boot_announce_sent)
+        {
+          // Send announcement to notify that device is up
+          zb_zdoSendDevAnnance();
+          boot_announce_sent = true;
+        }
+
+        // report handler
+        if (g_baseAppCtx.lastReportCheckSec != seconds())
+        {
+          app_chk_report(seconds() - g_baseAppCtx.lastReportCheckSec);
+          g_baseAppCtx.lastReportCheckSec = seconds();
+        }
+
+        update_relay_clusters();
+      }
+      else                 // Device not Joined
       {
-        // Send announcement to notify that device is up
-        zb_zdoSendDevAnnance();
-        boot_announce_sent = true;
+        network_indicator_not_connected(&network_indicator);
       }
-
-      // report handler
-      if (g_baseAppCtx.lastReportCheckSec != seconds())
+#if PM_ENABLE
+      if (!tl_stackBusy() && zb_isTaskDone())
       {
-        app_chk_report(seconds() - g_baseAppCtx.lastReportCheckSec);
-        g_baseAppCtx.lastReportCheckSec = seconds();
+        drv_pm_sleep(PM_SLEEP_MODE_SUSPEND, PM_WAKEUP_SRC_TIMER, PM_SLEEP_DURATION_MS_BUTTON);
       }
-
-      update_relay_clusters();
-    }
-    else                 // Device not Joined
+    } else
     {
-      network_indicator_not_connected(&network_indicator);
+      drv_pm_sleep(PM_SLEEP_MODE_SUSPEND, PM_WAKEUP_SRC_TIMER, PM_SLEEP_DURATION_MS_BUTTON);
     }
-                #if PM_ENABLE
-    if (!tl_stackBusy() && zb_isTaskDone())
-    {
-      drv_pm_sleep(PM_SLEEP_MODE_SUSPEND, PM_WAKEUP_SRC_TIMER, PM_SLEEP_DURATION_MS);
-    }
-                #endif
+#endif
   }
 }
 
