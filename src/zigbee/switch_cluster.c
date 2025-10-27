@@ -275,16 +275,20 @@ void switch_cluster_level_control(zigbee_switch_cluster *cluster) {
     return;
   }
 
-  hal_zigbee_cmd c = build_level_move_onoff_cmd(cluster->endpoint,
-                                                cluster->level_move_direction,
-                                                cluster->level_move_rate);
-  hal_zigbee_send_cmd_to_bindings(&c);
+  hal_zigbee_cmd c;
 
   if (cluster->level_move_direction == ZCL_LEVEL_MOVE_DOWN) {
+    c = build_level_move_cmd(cluster->endpoint,
+                             cluster->level_move_direction,
+                             cluster->level_move_rate);
     cluster->level_move_direction = ZCL_LEVEL_MOVE_UP;
   } else {
+    c = build_level_move_onoff_cmd(cluster->endpoint,
+                                   cluster->level_move_direction,
+                                   cluster->level_move_rate);
     cluster->level_move_direction = ZCL_LEVEL_MOVE_DOWN;
   }
+  hal_zigbee_send_cmd_to_bindings(&c);
 }
 
 void switch_cluster_on_button_press(zigbee_switch_cluster *cluster) {
