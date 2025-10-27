@@ -27,7 +27,7 @@ from tests.zcl_consts import (
     ZCL_ONOFF_CONFIGURATION_SWITCH_ACTION_TOGGLE_SIMPLE,
     ZCL_ONOFF_CONFIGURATION_SWITCH_ACTION_TOGGLE_SMART_SYNC,
     ZCL_ONOFF_CONFIGURATION_SWITCH_TYPE_MOMENTARY,
-    ZCL_ONOFF_CONFIGURATION_SWITCH_TYPE_MOMENTARY_NC,
+    ZCL_ONOFF_CONFIGURATION_SWITCH_TYPE_MOMENTARY_NC, ZCL_CMD_LEVEL_MOVE,
 )
 
 
@@ -396,7 +396,7 @@ def test_momentary_mode_level_control_direction_alternates(
     cmd_data = momentary_device.wait_for_cmd_send(
         relay_button_pair.switch_endpoint,
         ZCL_CLUSTER_LEVEL_CONTROL,
-        ZCL_CMD_LEVEL_MOVE_WITH_ON_OFF,
+        ZCL_CMD_LEVEL_MOVE,
     )
     assert cmd_data.data[0] == ZCL_LEVEL_MOVE_DOWN
     momentary_device.release_button(relay_button_pair.button_pin)
