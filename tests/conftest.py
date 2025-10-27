@@ -21,7 +21,7 @@ from tests.zcl_consts import (
     ZCL_CMD_ONOFF_ON,
 )
 
-DEBOUNCE_MS = 50
+DEBOUNCE_MS = 25
 
 
 @pytest.fixture(autouse=True)
