@@ -17,7 +17,7 @@
 set -e                                           # Exit on error.
 cd "$(dirname "$(dirname "$(realpath "$0")")")"  # Go to project root.
 
-DEVICE=AVATTO_TS0004  # Change this to your device
+DEVICE=MOES_SWITCHES_TS0013  # Change this to your device
 
 # Check if device exists in database
 if ! yq -e ".${DEVICE}" device_db.yaml >/dev/null 2>&1; then
@@ -37,14 +37,14 @@ echo "Building debug firmware for device: $DEVICE (MCU: $MCU, Platform: $PLATFOR
 # Build router version with debug enabled
 echo "=== Building router version with debug ==="
 TYPE=router
-BOARD=$DEVICE DEVICE_TYPE=$TYPE DEBUG=1 make board/build-firmware
+BOARD=$DEVICE DEVICE_TYPE=$TYPE DEBUG=0 make board/build
 echo "Checking if files were created for board: $DEVICE ($TYPE)"
 ls -l bin/$TYPE/$DEVICE/ 2>/dev/null || echo "No router files found"
 
 # Build end_device version with debug enabled  
 echo "=== Building end_device version with debug ==="
 TYPE=end_device
-BOARD=$DEVICE DEVICE_TYPE=$TYPE DEBUG=1 make board/build-firmware
+BOARD=$DEVICE DEVICE_TYPE=$TYPE DEBUG=0 make board/build
 echo "Checking if files were created for board: $DEVICE ($TYPE)"
 ls -l bin/$TYPE/${DEVICE}_END_DEVICE/ 2>/dev/null || echo "No end_device files found"
 
