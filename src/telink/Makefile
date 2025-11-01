@@ -186,7 +186,7 @@ OTA_FILE := $(BIN_DIR)/$(FIRMWARE_BASENAME).ota
 SIZEDUMMY := $(BUILD_DIR)/sizedummy
 
 # Default target
-all: $(BIN_FILE) $(LST_FILE)
+all: $(BIN_FILE) #$(LST_FILE)
 	@echo "Build complete: $(BIN_FILE)"
 
 # Build main ELF file
@@ -195,9 +195,9 @@ $(ELF_FILE): $(ALL_APP_OBJS) sdk-build
 	@$(LD) $(LNK_FLAGS) -T$(LINKER_SCRIPT) $(LIBRARY_PATHS) -o $@ $(ALL_APP_OBJS) $(SDK_OBJS) $(LIBS)
 
 
-$(LST_FILE): $(ELF_FILE)
-	@echo 'Invoking: TC32 Create Extended Listing'
-	@$(OBJDUMP) -x -D -l -S  $(ELF_FILE)  > $(LST_FILE)
+#$(LST_FILE): $(ELF_FILE)
+#	@echo 'Invoking: TC32 Create Extended Listing'
+#	@$(OBJDUMP) -x -D -l -S  $(ELF_FILE)  > $(LST_FILE)
 
 # Create binary file
 $(BIN_FILE): $(ELF_FILE)
@@ -324,6 +324,6 @@ help:
 	@echo "Output Files:"
 	@echo "  ELF: $(ELF_FILE)"
 	@echo "  BIN: $(BIN_FILE)"
-	@echo "  LST: $(LST_FILE)"
+	#@echo "  LST: $(LST_FILE)"
 
 .PHONY: all build clean ota flash restart wipe flasher help
