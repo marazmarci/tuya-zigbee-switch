@@ -278,9 +278,15 @@ void switch_cluster_level_control(zigbee_switch_cluster *cluster) {
   hal_zigbee_cmd c;
 
   if (cluster->level_move_direction == ZCL_LEVEL_MOVE_DOWN) {
-    c = build_level_move_cmd(cluster->endpoint,
-                             cluster->level_move_direction,
-                             cluster->level_move_rate);
+    if (hal_zigbee_is_onoff_bound_to_same_dst_as_levelctrl(cluster->endpoint)) {
+      c = build_level_move_cmd(cluster->endpoint,
+                               cluster->level_move_direction,
+                               cluster->level_move_rate);
+    } else {
+      c = build_level_move_onoff_cmd(cluster->endpoint,
+                                     cluster->level_move_direction,
+                                     cluster->level_move_rate);
+    }
     cluster->level_move_direction = ZCL_LEVEL_MOVE_UP;
   } else {
     c = build_level_move_onoff_cmd(cluster->endpoint,

@@ -300,3 +300,7 @@ hal_zigbee_status_t hal_zigbee_send_announce(void) {
 }
 
 void hal_zigbee_init_ota() {}
+
+bool hal_zigbee_is_onoff_bound_to_same_dst_as_levelctrl(uint8_t src_endpoint) {
+  return false; // TODO implement
+}
