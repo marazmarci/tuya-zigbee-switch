@@ -206,4 +206,6 @@ hal_zigbee_find_attribute(hal_zigbee_endpoint *endpoints,
   return NULL;
 }
 
+bool hal_zigbee_is_onoff_bound_to_same_dst_as_levelctrl(uint8_t src_endpoint);
+
 #endif

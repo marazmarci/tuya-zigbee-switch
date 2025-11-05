@@ -267,3 +267,7 @@ void stub_simulate_zigbee_attribute_write(uint8_t endpoint, uint16_t cluster_id,
     attr_change_callback(endpoint, cluster_id, attribute_id);
   }
 }
+
+bool hal_zigbee_is_onoff_bound_to_same_dst_as_levelctrl(uint8_t src_endpoint) {
+  return false; // TODO implement
+}
