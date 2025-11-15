@@ -236,6 +236,8 @@ const definitions = [
                 max: constants.repInterval.MAX,
                 change: 1,
             });
+            {% endfor %}
+            {% for indicatorName in device.relayIndicatorNames %}
             // indicator:
             await endpoint{{loop.index  + (device.switchNames | length)}}.configureReporting("genOnOff", [
                 {
